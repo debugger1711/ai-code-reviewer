@@ -1,6 +1,6 @@
 import json
 from google import genai
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import CodeReview, ReviewResult
 
 # ⚠️ YAHAN APNI ASLI API KEY DAALNA (Quotes "" ke andar)
@@ -76,3 +76,20 @@ def home_view(request):
                 return render(request, 'reviewer/home.html', {'error': f"AI Error: {e}"})
 
     return render(request, 'reviewer/home.html')
+
+
+
+# ... (Aapka purana code yahan rahega) ...
+
+def review_detail_view(request, review_id):
+    # ID ke hisaab se us specific code aur uske result ko dhoondhna
+    review_instance = get_object_or_404(CodeReview.objects.select_related('result'), id=review_id)
+    
+    # Detail page par bhej dena
+    return render(request, 'reviewer/detail.html', {'review': review_instance})
+
+# Yeh views.py ke aakhiri mein aayega
+def history_view(request):
+    # Database se saare review nikal rahe hain
+    all_reviews = CodeReview.objects.all().select_related('result').order_by('-created_at')
+    return render(request, 'reviewer/history.html', {'reviews': all_reviews})
