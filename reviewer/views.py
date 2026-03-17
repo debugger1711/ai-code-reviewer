@@ -1,13 +1,11 @@
 import json
+import os
 from google import genai
 from django.shortcuts import render, get_object_or_404
 from .models import CodeReview, ReviewResult
-
-# ⚠️ YAHAN APNI ASLI API KEY DAALNA (Quotes "" ke andar)
-import os
 from dotenv import load_dotenv
 
-# .env file se secret data load karna
+# .env file se secret data (API Key) load karna
 load_dotenv() 
 
 # Ab key direct nahi, .env file se aayegi
@@ -30,8 +28,9 @@ def home_view(request):
                 # 2. Naye Client ke sath AI setup
                 client = genai.Client(api_key=API_KEY)
                 
+                # YAHAN CHANGE KIYA HAI: Ab AI kisi bhi language ko samajh lega
                 prompt = f"""
-                Aap ek expert AI Code Reviewer ho. Niche diye gaye Python code ko analyze karo:
+                Aap ek expert AI Code Reviewer ho. Niche diye gaye code snippet ko analyze karo (programming language khud detect karo):
                 
                 {user_code}
                 
@@ -41,13 +40,13 @@ def home_view(request):
                     "space_complexity": "O(?)",
                     "bugs_detected": "koi bug hai toh batao warna likho no bugs",
                     "optimization_suggestions": "code ko fast ya clean kaise karein",
-                    "code_quality_feedback": "naming conventions, PEP8 rules etc"
+                    "code_quality_feedback": "naming conventions, best practices etc"
                 }}
                 """
                 
                 print("👉 CHECK 5: Naye AI ko request bhej rahe hain (gemini-2.5-flash)...")
                 
-                # 3. AI ko call karna (Aapki list wala model use kar rahe hain)
+                # 3. AI ko call karna
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
                     contents=prompt
@@ -78,9 +77,6 @@ def home_view(request):
     return render(request, 'reviewer/home.html')
 
 
-
-# ... (Aapka purana code yahan rahega) ...
-
 def review_detail_view(request, review_id):
     # ID ke hisaab se us specific code aur uske result ko dhoondhna
     review_instance = get_object_or_404(CodeReview.objects.select_related('result'), id=review_id)
@@ -88,7 +84,7 @@ def review_detail_view(request, review_id):
     # Detail page par bhej dena
     return render(request, 'reviewer/detail.html', {'review': review_instance})
 
-# Yeh views.py ke aakhiri mein aayega
+
 def history_view(request):
     # Database se saare review nikal rahe hain
     all_reviews = CodeReview.objects.all().select_related('result').order_by('-created_at')
