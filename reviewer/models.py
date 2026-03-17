@@ -18,8 +18,8 @@ class ReviewResult(models.Model):
     review = models.OneToOneField(CodeReview, on_delete=models.CASCADE, related_name='result')
     
     # AI se jo feedback aayega usko alag-alag dabbon (fields) me save karenge
-    time_complexity = models.CharField(max_length=100, blank=True)
-    space_complexity = models.CharField(max_length=100, blank=True)
+    time_complexity = models.TextField(blank=True, null=True)
+    space_complexity = models.TextField(blank=True, null=True)
     bugs_detected = models.TextField(blank=True)
     optimization_suggestions = models.TextField(blank=True)
     code_quality_feedback = models.TextField(blank=True)

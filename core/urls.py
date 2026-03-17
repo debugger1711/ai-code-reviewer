@@ -7,5 +7,7 @@ urlpatterns = [
     path('', views.home_view, name='home'),
     path('history/', views.history_view, name='history'),
     # 👇 Yeh nayi line add karni hai 👇
-    path('review/<int:review_id>/', views.review_detail_view, name='review_detail'), 
+    path('review/<int:review_id>/', views.review_detail_view, name='review_detail'),
+    path('about/', views.about_view, name='about'),
+    path('contact/', views.contact_view, name='contact'), 
 ]

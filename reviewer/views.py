@@ -18,6 +18,9 @@ def home_view(request):
         print("👉 CHECK 2: Form Submit hua")
         user_code = request.POST.get('code_input')
         
+        # 👇 YAHAN CHANGE KIYA: User ki select ki hui language pakad rahe hain 👇
+        selected_language = request.POST.get('output_language', 'English')
+        
         if user_code:
             print("👉 CHECK 3: User ne code daala hai...")
             try:
@@ -28,23 +31,26 @@ def home_view(request):
                 # 2. Naye Client ke sath AI setup
                 client = genai.Client(api_key=API_KEY)
                 
-                # YAHAN CHANGE KIYA HAI: Ab AI kisi bhi language ko samajh lega
+                # 👇 YAHAN CHANGE KIYA: Prompt mein selected language set kar di 👇
                 prompt = f"""
-                Aap ek expert AI Code Reviewer ho. Niche diye gaye code snippet ko analyze karo (programming language khud detect karo):
+                You are an expert AI Code Reviewer. Analyze the following code snippet.
                 
+                CRITICAL INSTRUCTION: You MUST write your explanations and feedback strictly in the "{selected_language}" language.
+                
+                Code to analyze:
                 {user_code}
                 
-                Aur mujhe sirf aur sirf ek valid JSON format me result do (uske alawa koi text mat likhna). Format yeh hona chahiye:
+                Provide the output ONLY in a valid JSON format. Do not include any markdown formatting like ```json. Use these keys:
                 {{
-                    "time_complexity": "O(?)",
-                    "space_complexity": "O(?)",
-                    "bugs_detected": "koi bug hai toh batao warna likho no bugs",
-                    "optimization_suggestions": "code ko fast ya clean kaise karein",
-                    "code_quality_feedback": "naming conventions, best practices etc"
+                    "time_complexity": "O(?) - keep it short",
+                    "space_complexity": "O(?) - keep it short",
+                    "bugs_detected": "explain any bugs found in {selected_language}, or say no bugs",
+                    "optimization_suggestions": "how to make code faster/cleaner in {selected_language}",
+                    "code_quality_feedback": "naming conventions, best practices in {selected_language}"
                 }}
                 """
                 
-                print("👉 CHECK 5: Naye AI ko request bhej rahe hain (gemini-2.5-flash)...")
+                print(f"👉 CHECK 5: Naye AI ko request bhej rahe hain ({selected_language} ke liye)...")
                 
                 # 3. AI ko call karna
                 response = client.models.generate_content(
@@ -68,7 +74,10 @@ def home_view(request):
                 )
                 print("👉 CHECK 7: Chamatkar! Sab kuch database mein save ho gaya! 🎉")
                 
-                return render(request, 'reviewer/home.html', {'result': result_obj, 'user_code': user_code})
+                return render(request, 'reviewer/home.html', {
+                    'result': result_obj, 
+                    'user_code': user_code
+                })
                 
             except Exception as e:
                 print(f"❌❌❌ ERROR PAKDA GAYA: {e} ❌❌❌")
@@ -89,3 +98,10 @@ def history_view(request):
     # Database se saare review nikal rahe hain
     all_reviews = CodeReview.objects.all().select_related('result').order_by('-created_at')
     return render(request, 'reviewer/history.html', {'reviews': all_reviews})
+
+# Yeh views.py ke aakhiri mein add karna hai
+def about_view(request):
+    return render(request, 'reviewer/about.html')
+
+def contact_view(request):
+    return render(request, 'reviewer/contact.html')

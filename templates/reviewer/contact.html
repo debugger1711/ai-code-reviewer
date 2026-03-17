@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto p-6 mt-10">
+    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <h2 class="text-3xl font-extrabold text-gray-800 mb-6 text-center border-b pb-4">Let's Connect</h2>
+        
+        <p class="text-center text-gray-600 mb-8 text-lg leading-relaxed">
+            I am always open to discussing new projects, creative ideas, or opportunities to collaborate. Whether you have a question about the architecture of this AI Code Reviewer, want to discuss software development, or simply want to say hi, feel free to reach out!
+        </p>
+
+        <div class="flex flex-col space-y-4 max-w-md mx-auto">
+            <a href="https://github.com/" target="_blank" class="flex items-center justify-center space-x-3 bg-gray-900 hover:bg-black text-white py-3 px-6 rounded-lg font-bold transition shadow-md">
+                <span class="text-xl">🐙</span>
+                <span>Explore My GitHub</span>
+            </a>
+            
+            <a href="https://linkedin.com/" target="_blank" class="flex items-center justify-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-bold transition shadow-md">
+                <span class="text-xl">💼</span>
+                <span>Connect on LinkedIn</span>
+            </a>
+
+            <a href="mailto:your.email@example.com" class="flex items-center justify-center space-x-3 bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg font-bold transition shadow-md">
+                <span class="text-xl">📧</span>
+                <span>Drop Me an Email</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
