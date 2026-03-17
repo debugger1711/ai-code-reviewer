@@ -14,15 +14,23 @@ class CodeReview(models.Model):
 # Uske niche yeh naya class add karna:
 
 class ReviewResult(models.Model):
-    # Yeh naya table purane CodeReview table se juda hoga (OneToOne relation)
     review = models.OneToOneField(CodeReview, on_delete=models.CASCADE, related_name='result')
     
-    # AI se jo feedback aayega usko alag-alag dabbon (fields) me save karenge
+    # Original Code Info
     time_complexity = models.TextField(blank=True, null=True)
     space_complexity = models.TextField(blank=True, null=True)
-    bugs_detected = models.TextField(blank=True)
-    optimization_suggestions = models.TextField(blank=True)
-    code_quality_feedback = models.TextField(blank=True)
+    
+    # 👇 NAYE COLUMNS 👇
+    optimized_time_complexity = models.TextField(blank=True, null=True)
+    optimized_space_complexity = models.TextField(blank=True, null=True)
+    edge_cases = models.TextField(blank=True, null=True)
+    test_cases = models.TextField(blank=True, null=True)
+    dry_run = models.TextField(blank=True, null=True)
+    
+    bugs_detected = models.TextField(blank=True, null=True)
+    optimization_suggestions = models.TextField(blank=True, null=True)
+    code_quality_feedback = models.TextField(blank=True, null=True)
+    optimized_code = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return f"AI Result for Review #{self.review.id}"

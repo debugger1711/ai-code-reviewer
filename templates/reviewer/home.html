@@ -5,8 +5,9 @@
     <h1 class="text-4xl font-extrabold text-center mb-8 text-blue-700">AI Code Reviewer</h1>
 
     <div class="bg-white shadow-2xl rounded-xl p-6 border border-gray-100">
-        <form id="reviewForm" method="POST">
+        <form id="reviewForm" method="POST" action="{% url 'home' %}">
             {% csrf_token %}
+            
             <div class="mb-4">
                 <label class="block text-gray-700 font-bold mb-2">Select Response Language:</label>
                 <select name="output_language" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 text-gray-800">
@@ -17,6 +18,7 @@
                     <option value="French">🇫🇷 French</option>
                 </select>
             </div>
+            
             <label class="block text-gray-700 font-bold mb-2">Paste Your Code Here:</label>
             <textarea id="codeInput" name="code_input">{{ user_code|default:"" }}</textarea>
 
@@ -43,59 +45,135 @@
     </div>
 
     {% if result %}
-    <div class="mt-10 bg-white p-8 rounded-xl shadow-xl border-l-8 border-green-500">
+    <div class="mt-10 bg-white p-8 rounded-2xl shadow-2xl border-l-8 border-green-500">
         
         <div id="printableReport" class="pt-2 pb-4">
+            
             <div class="mb-8 pb-4 border-b-2 border-gray-200">
                 <h2 class="text-3xl font-extrabold text-gray-800 mb-4 flex items-center">
-                    <span class="mr-2">🚀</span> AI Analysis Result
+                    <span class="mr-2">🚀</span> AI Analysis Report
                 </h2>
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm text-gray-700">
-                    <p class="mb-1"><strong class="text-gray-900">Name:</strong> Vishal Kumar</p>
-                    <p class="mb-1"><strong class="text-gray-900">Roll Number:</strong> 13000123125</p>
-                    <p><strong class="text-gray-900">Report Generated:</strong> {% now "jS F Y, h:i A" %}</p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <p class="text-blue-500 font-bold text-xs uppercase tracking-wider">Time Complexity</p>
-                    <p class="text-xl font-mono font-bold text-blue-800">{{ result.time_complexity }}</p>
-                </div>
-                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
-                    <p class="text-purple-500 font-bold text-xs uppercase tracking-wider">Space Complexity</p>
-                    <p class="text-xl font-mono font-bold text-purple-800">{{ result.space_complexity }}</p>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm text-gray-700 flex justify-between items-center">
+                    <div>
+                        <p class="mb-1"><strong class="text-gray-900">Developer:</strong> Vishal Kumar</p>
+                        <p class="mb-1"><strong class="text-gray-900">Roll Number:</strong> 13000123125</p>
+                    </div>
+                    <div class="text-right">
+                        <p><strong class="text-gray-900">Generated On:</strong></p>
+                        <p class="text-gray-600">{% now "jS F Y, h:i A" %}</p>
+                    </div>
                 </div>
             </div>
 
             <div class="space-y-6">
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <h4 class="font-bold text-red-600 border-b pb-2 mb-2">🐛 Bugs Detected</h4>
-                    <p class="text-gray-700 whitespace-pre-line">{{ result.bugs_detected }}</p>
+                
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100 shadow-sm">
+                    <h4 class="font-bold text-red-700 border-b border-red-200 pb-2 mb-3 text-lg flex items-center">
+                        <span class="mr-2">🐛</span> Bugs Detected
+                    </h4>
+                    <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15.5px]">{{ result.bugs_detected }}</p>
                 </div>
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <h4 class="font-bold text-green-600 border-b pb-2 mb-2">💡 Optimization Suggestions</h4>
-                    <p class="text-gray-700 whitespace-pre-line">{{ result.optimization_suggestions }}</p>
+                
+                <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-100 shadow-sm">
+                    <h4 class="font-bold text-yellow-700 border-b border-yellow-200 pb-2 mb-3 text-lg flex items-center">
+                        <span class="mr-2">💡</span> Optimization Suggestions
+                    </h4>
+                    <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15.5px]">{{ result.optimization_suggestions }}</p>
                 </div>
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <h4 class="font-bold text-blue-600 border-b pb-2 mb-2">✨ Code Quality Feedback</h4>
-                    <p class="text-gray-700 whitespace-pre-line">{{ result.code_quality_feedback }}</p>
+
+                <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100 shadow-sm">
+                    <h4 class="font-bold text-indigo-700 border-b border-indigo-200 pb-2 mb-3 text-lg flex items-center">
+                        <span class="mr-2">✨</span> Code Quality Feedback
+                    </h4>
+                    <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15.5px]">{{ result.code_quality_feedback }}</p>
                 </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-purple-50 p-6 rounded-xl border border-purple-100 shadow-sm">
+                        <h4 class="font-bold text-purple-700 border-b border-purple-200 pb-2 mb-3 text-lg flex items-center">
+                            <span class="mr-2">⚠️</span> Edge Cases
+                        </h4>
+                        <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15px]">{{ result.edge_cases }}</p>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                        <h4 class="font-bold text-blue-700 border-b border-blue-200 pb-2 mb-3 text-lg flex items-center">
+                            <span class="mr-2">🧪</span> Sample Test Cases
+                        </h4>
+                        <p class="text-gray-800 whitespace-pre-line leading-relaxed font-mono text-[14px] bg-white p-3 rounded border border-blue-200">{{ result.test_cases }}</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h4 class="font-bold text-gray-800 border-b border-gray-300 pb-2 mb-3 text-lg flex items-center">
+                        <span class="mr-2">🏃‍♂️</span> Code Dry Run (Step-by-Step)
+                    </h4>
+                    <p class="text-gray-700 whitespace-pre-line leading-relaxed font-mono text-[14px]">{{ result.dry_run }}</p>
+                </div>
+                
+                {% if result.optimized_code %}
+                <div class="mt-8 bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+                    <div class="bg-gray-800 px-5 py-4 flex justify-between items-center border-b border-gray-700">
+                        <span class="text-green-400 font-bold font-mono text-sm flex items-center">
+                            <span class="mr-2">🔥</span> Auto-Refactored & Optimized Code
+                        </span>
+                        <button type="button" onclick="copyOptimizedCode()" data-html2canvas-ignore="true" class="flex items-center text-gray-300 hover:text-white bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-sm transition duration-300 shadow-sm">
+                            <span class="mr-1">📋</span> Copy Code
+                        </button>
+                    </div>
+                    <div class="p-6 overflow-x-auto">
+                        <pre><code id="optimizedCodeBlock" class="text-blue-300 font-mono text-[15px] leading-relaxed">{{ result.optimized_code }}</code></pre>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="mt-10 mb-2 bg-white border-2 border-gray-100 rounded-xl overflow-hidden shadow-md">
+                    <div class="bg-gray-800 text-white px-5 py-3 font-bold tracking-wider flex items-center justify-center">
+                        📊 Complexity Comparison Report
+                    </div>
+                    <table class="w-full text-center border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 uppercase text-xs font-extrabold tracking-wider border-b-2 border-gray-200">
+                                <th class="p-4 border-r border-gray-200 w-1/3">Metric</th>
+                                <th class="p-4 border-r border-gray-200 text-red-600 w-1/3">Original Code</th>
+                                <th class="p-4 text-green-600 w-1/3">Optimized Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+                                <td class="p-4 font-bold text-gray-700 border-r border-gray-200 text-left pl-6">⏱️ Time Complexity</td>
+                                <td class="p-4 font-mono text-red-600 font-bold bg-red-50/50 border-r border-gray-200">{{ result.time_complexity }}</td>
+                                <td class="p-4 font-mono text-green-600 font-bold bg-green-50/50">{{ result.optimized_time_complexity }}</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 font-bold text-gray-700 border-r border-gray-200 text-left pl-6">💾 Space Complexity</td>
+                                <td class="p-4 font-mono text-red-600 font-bold bg-red-50/50 border-r border-gray-200">{{ result.space_complexity }}</td>
+                                <td class="p-4 font-mono text-green-600 font-bold bg-green-50/50">{{ result.optimized_space_complexity }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
+        
         <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end">
-            <button onclick="downloadPDF()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg shadow-md font-bold flex items-center transition duration-300">
+            <button onclick="downloadPDF()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg font-bold flex items-center transition duration-300 transform hover:scale-105">
                 <span class="mr-2">📄</span> Download PDF Report
             </button>
         </div>
 
     </div>
     {% endif %}
+    {% if error %}
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mt-6 shadow-md" role="alert">
+        <p class="font-bold flex items-center"><span class="mr-2">⚠️</span> Oops! Kuch gadbad ho gayi:</p>
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-    // 1. CodeMirror Initialize karna
     var editor = CodeMirror.fromTextArea(document.getElementById("codeInput"), {
         lineNumbers: true,
         theme: "dracula",
@@ -108,29 +186,29 @@
 
     editor.setSize(null, "350px");
 
-    // 2. Form Submit Logic
     document.getElementById('reviewForm').addEventListener('submit', function(e) {
         editor.save(); 
         document.getElementById('buttonGroup').classList.add('hidden');
         document.getElementById('loadingDiv').classList.remove('hidden');
     });
 
-    // 3. Naya Update Kiya Hua PDF Download Function
     function downloadPDF() {
         const element = document.getElementById('printableReport');
-        
         const opt = {
             margin:       0.5,
             filename:     'Code_Review_Report_13000123125.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            // scrollY: 0 lagane se aadhi screen wali problem solve ho jayegi
             html2canvas:  { scale: 2, scrollY: 0 },
-            // pagebreak mode se bada content apne aap 2nd page par chala jayega
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
-        
         html2pdf().set(opt).from(element).save();
+    }
+
+    function copyOptimizedCode() {
+        const code = document.getElementById('optimizedCodeBlock').innerText;
+        navigator.clipboard.writeText(code);
+        alert('Refactored code copied to clipboard! 🚀');
     }
 </script>
 
