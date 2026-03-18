@@ -28,6 +28,7 @@ def home_view(request):
                 review_instance = CodeReview.objects.create(code_input=user_code)
                 client = genai.Client(api_key=API_KEY)
                 
+                # 👇 YAHAN NAYA STRICT PROMPT LAGA HAI 👇
                 prompt = f"""
                 You are an expert AI Code Reviewer. Analyze the code snippet.
                 CRITICAL: Explanations MUST be in "{selected_language}" language.
@@ -36,6 +37,10 @@ def home_view(request):
                 {user_code}
                 
                 Provide the output ONLY in a valid JSON format. Escape all newlines (\\n) and quotes (\\") inside strings.
+                
+                CRITICAL FORMATTING INSTRUCTION FOR EDGE CASES, TEST CASES, AND DRY RUN:
+                Do NOT write long paragraphs. Write them STRICTLY as code snippets where explanations are just inline comments (using // or #). Keep it extremely concise.
+                
                 Use exactly these keys:
                 {{
                     "original_time_complexity": "O(?) - short",
@@ -45,10 +50,10 @@ def home_view(request):
                     "bugs_detected": "Bugs in {selected_language} or 'No bugs'",
                     "optimization_suggestions": "Suggestions in {selected_language}",
                     "code_quality_feedback": "Feedback in {selected_language}",
-                    "optimized_code": "The full refactored code",
-                    "edge_cases": "List 2-3 edge cases to consider",
-                    "test_cases": "Provide 2 sample test cases (Input -> Expected Output)",
-                    "dry_run": "Give a short, step-by-step dry run of the optimized code with a sample input"
+                    "optimized_code": "The full refactored code. CRITICAL: Remove ALL comments (//, #, /* */) from this code. Make it 100% comment-free.",
+                    "edge_cases": "Write 2-3 edge cases as code. Example: \ncheck_empty([]) // Handles empty array input",
+                    "test_cases": "Write 2-3 test cases as code. Example: \nassert solve(2) == 4 // Basic even number test",
+                    "dry_run": "Write 1 dry run as step-by-step code. Example: \nval = 5 // Initial value \nval = val * 2 // Becomes 10"
                 }}
                 """
                 

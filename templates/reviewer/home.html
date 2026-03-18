@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
 <div class="max-w-5xl mx-auto p-4">
     <h1 class="text-4xl font-extrabold text-center mb-8 text-blue-700">AI Code Reviewer</h1>
 
@@ -81,38 +83,43 @@
                     <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15.5px]">{{ result.optimization_suggestions }}</p>
                 </div>
 
-                <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100 shadow-sm">
-                    <h4 class="font-bold text-indigo-700 border-b border-indigo-200 pb-2 mb-3 text-lg flex items-center">
-                        <span class="mr-2">✨</span> Code Quality Feedback
-                    </h4>
-                    <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15.5px]">{{ result.code_quality_feedback }}</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-purple-50 p-6 rounded-xl border border-purple-100 shadow-sm">
-                        <h4 class="font-bold text-purple-700 border-b border-purple-200 pb-2 mb-3 text-lg flex items-center">
+                <div class="mt-8 bg-[#282c34] rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                    <div class="bg-[#21252b] px-5 py-3 border-b border-gray-700">
+                        <span class="text-purple-400 font-bold font-mono text-sm flex items-center">
                             <span class="mr-2">⚠️</span> Edge Cases
-                        </h4>
-                        <p class="text-gray-800 whitespace-pre-line text-justify leading-relaxed text-[15px]">{{ result.edge_cases }}</p>
+                        </span>
                     </div>
-                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
-                        <h4 class="font-bold text-blue-700 border-b border-blue-200 pb-2 mb-3 text-lg flex items-center">
-                            <span class="mr-2">🧪</span> Sample Test Cases
-                        </h4>
-                        <p class="text-gray-800 whitespace-pre-line leading-relaxed font-mono text-[14px] bg-white p-3 rounded border border-blue-200">{{ result.test_cases }}</p>
+                    <div class="overflow-x-auto p-4">
+                        <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.edge_cases }}</code></pre>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h4 class="font-bold text-gray-800 border-b border-gray-300 pb-2 mb-3 text-lg flex items-center">
-                        <span class="mr-2">🏃‍♂️</span> Code Dry Run (Step-by-Step)
-                    </h4>
-                    <p class="text-gray-700 whitespace-pre-line leading-relaxed font-mono text-[14px]">{{ result.dry_run }}</p>
+                <div class="mt-6 bg-[#282c34] rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                    <div class="bg-[#21252b] px-5 py-3 border-b border-gray-700">
+                        <span class="text-blue-400 font-bold font-mono text-sm flex items-center">
+                            <span class="mr-2">🧪</span> Sample Test Cases
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.test_cases }}</code></pre>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-[#282c34] rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                    <div class="bg-[#21252b] px-5 py-3 border-b border-gray-700">
+                        <span class="text-yellow-400 font-bold font-mono text-sm flex items-center">
+                            <span class="mr-2">🏃‍♂️</span> Code Dry Run (Step-by-Step)
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.dry_run }}</code></pre>
+                    </div>
                 </div>
                 
+                
                 {% if result.optimized_code %}
-                <div class="mt-8 bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-700">
-                    <div class="bg-gray-800 px-5 py-4 flex justify-between items-center border-b border-gray-700">
+                <div class="mt-8 bg-[#282c34] rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+                    <div class="bg-[#21252b] px-5 py-4 flex justify-between items-center border-b border-gray-700">
                         <span class="text-green-400 font-bold font-mono text-sm flex items-center">
                             <span class="mr-2">🔥</span> Auto-Refactored & Optimized Code
                         </span>
@@ -120,8 +127,8 @@
                             <span class="mr-1">📋</span> Copy Code
                         </button>
                     </div>
-                    <div class="p-6 overflow-x-auto">
-                        <pre><code id="optimizedCodeBlock" class="text-blue-300 font-mono text-[15px] leading-relaxed">{{ result.optimized_code }}</code></pre>
+                    <div class="overflow-x-auto p-4">
+                        <pre style="margin: 0;"><code id="optimizedCodeBlock" class="text-[15px] leading-relaxed rounded-lg">{{ result.optimized_code }}</code></pre>
                     </div>
                 </div>
                 {% endif %}
@@ -172,8 +179,11 @@
     {% endif %}
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <script>
+    // 1. CodeMirror Setup
     var editor = CodeMirror.fromTextArea(document.getElementById("codeInput"), {
         lineNumbers: true,
         theme: "dracula",
@@ -183,15 +193,24 @@
         autoCloseBrackets: true,
         viewportMargin: Infinity
     });
-
     editor.setSize(null, "350px");
 
+    // 2. Form Submit Loading Animation
     document.getElementById('reviewForm').addEventListener('submit', function(e) {
         editor.save(); 
         document.getElementById('buttonGroup').classList.add('hidden');
         document.getElementById('loadingDiv').classList.remove('hidden');
     });
 
+    // 3. 👇 AI ke Code ko Color (Highlight) karne wala function 👇
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('pre code').forEach((el) => {
+            // Yeh function code ko read karke usme colors bharega
+            hljs.highlightElement(el);
+        });
+    });
+
+    // 4. PDF Download
     function downloadPDF() {
         const element = document.getElementById('printableReport');
         const opt = {
@@ -205,6 +224,7 @@
         html2pdf().set(opt).from(element).save();
     }
 
+    // 5. Copy Code
     function copyOptimizedCode() {
         const code = document.getElementById('optimizedCodeBlock').innerText;
         navigator.clipboard.writeText(code);
@@ -218,6 +238,13 @@
         font-family: 'Fira Code', 'Courier New', monospace;
         font-size: 14px;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* 👇 NAYA HACK: Tailwind ko dark theme kharab karne se rokne ke liye 👇 */
+    pre code.hljs {
+        color: #abb2bf !important; /* Text ko mast Atom editor wala greyish-white dega */
+        background: transparent !important;
+        font-family: 'Fira Code', 'Courier New', monospace;
     }
 </style>
 {% endblock %}
