@@ -89,7 +89,7 @@
                             <span class="mr-2">⚠️</span> Edge Cases
                         </span>
                     </div>
-                    <div class="overflow-x-auto p-4">
+                    <div class="overflow-x-auto p-4 max-h-[200px] overflow-y-auto custom-scrollbar">
                         <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.edge_cases }}</code></pre>
                     </div>
                 </div>
@@ -100,8 +100,8 @@
                             <span class="mr-2">🧪</span> Sample Test Cases
                         </span>
                     </div>
-                    <div class="overflow-x-auto p-4">
-                        <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.test_cases }}</code></pre>
+                    <div class="overflow-x-auto p-4 max-h-[200px] overflow-y-auto custom-scrollbar">
+                    <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.test_cases }}</code></pre>
                     </div>
                 </div>
 
@@ -111,7 +111,7 @@
                             <span class="mr-2">🏃‍♂️</span> Code Dry Run (Step-by-Step)
                         </span>
                     </div>
-                    <div class="overflow-x-auto p-4">
+                    <div class="overflow-x-auto p-4 max-h-[250px] overflow-y-auto custom-scrollbar">
                         <pre style="margin: 0;"><code class="text-[14px] leading-relaxed rounded-lg">{{ result.dry_run }}</code></pre>
                     </div>
                 </div>
@@ -127,8 +127,8 @@
                             <span class="mr-1">📋</span> Copy Code
                         </button>
                     </div>
-                    <div class="overflow-x-auto p-4">
-                        <pre style="margin: 0;"><code id="optimizedCodeBlock" class="text-[15px] leading-relaxed rounded-lg">{{ result.optimized_code }}</code></pre>
+                    <div class="overflow-x-auto p-4 max-h-[400px] overflow-y-auto custom-scrollbar bg-[#282c34]">
+                        <pre style="margin: 0;"><code id="optimizedCodeBlock" class="text-[15px] leading-relaxed">{{ result.optimized_code }}</code></pre>
                     </div>
                 </div>
                 {% endif %}
